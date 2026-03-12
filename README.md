@@ -17,29 +17,47 @@
 
 Первое, что я вижу при запуске программы:
 
+<div align="center">
 <img width="1033" height="288" alt="image" src="https://github.com/user-attachments/assets/bf4ef53c-1bd7-40fe-ba5b-5e23f3c6a7be" />
+<p><em>Приветственная рамка</em></p>
+</div>
 
 Пробую самый очевидный вариант:
 
+<div align="center">
 <img width="1793" height="538" alt="image" src="https://github.com/user-attachments/assets/b81be36d-0406-422f-83e3-8c090fd33665" />
+<p><em>Неудачная попытка...</em></p>
+</div>
 
 После детального изучения кода я замечаю две важные вещи. Первое - использование хеш-функции для пароля:
 
+<div align="center">
 <img width="1127" height="519" alt="image" src="https://github.com/user-attachments/assets/e842cfb6-500a-46e5-9656-330c20c66405" />
+<p><em>Хеш-функция</em></p>
+</div>
 
 Второе - место, где располагается мой ответ при вводе, совпадает с тем, где хранится правильный ответ.
 Вот, что получается при вводе 'aaaaa':
 
+<div align="center">
 <img width="901" height="142" alt="image" src="https://github.com/user-attachments/assets/0baf0c7c-3322-48fd-b5da-1148849c6f7e" />
+<p><em>Затирание пароля</em></p>
+</div>
 
 Таким образом, любые вводимые мною символы меняют пароль. Я возращаюсь к началу, вознамереваясь проверить условия окончания ввода.
 Как и ожидалось, программа требует нажатия 'Enter'...
 
+<div align="center">
 <img width="906" height="150" alt="image" src="https://github.com/user-attachments/assets/8b529959-088f-4650-a864-3743c82e5a90" />
+<p><em>Сравнение с ascii-кодом Enter'a</em></p>
+</div>
 
 ...но ключевая идея в том, что пароль не изменится, если я просто нажму 'Enter' в начале программы. Вот результат этого действия:
 
+<div align="center">
 <img width="1185" height="279" alt="image" src="https://github.com/user-attachments/assets/8ca8b160-cdae-4a63-a031-ff5bf8eb8ede" />
+  <p><em>Победа!</em></p>
+</div>
 
 Так, первая уязвимость найдена.
 
@@ -49,19 +67,31 @@
 буфера для взлома. Хеш-функция берет некоторую информацию из сегмента памяти, расположенного между паролем и выводимыми для
 пользователя сообщениями...
 
+<div align="center">
 <img width="1009" height="306" alt="image" src="https://github.com/user-attachments/assets/123a33dc-9a2f-4cc7-8c68-d72c3e3d616c" />
+<p><em>Использование данных для вычисления хеша</em></p>
+</div>
 
 ...и кладёт их в AX при каждой итерации цикла. 
 
+<div align="center">
 <img width="992" height="271" alt="image" src="https://github.com/user-attachments/assets/06499051-ca2b-495e-82cb-375356c6777b" />
+<p><em>Кладём данные в AL и AH</em></p>
+</div>
 
 Это единственные изменения, происходящие с регистром AX. Также в BX после цикла кладётся хеш правильного пароля, лежащий в той же области. Поэтому следующее, что я попробовала - замена всех данных между паролем и сообщениями случайными, но одинаковыми символами. Они будут положены в AX, и такие же попадут в BX.
 
+<div align="center">
 <img width="936" height="98" alt="image" src="https://github.com/user-attachments/assets/a7a5fbfc-a4a8-401a-a5ba-26f0a4ad5790" />
+<p><em>Сравнение AX и BX</em></p>
+</div>
 
 Таким образом, сравнение приведёт к успешному результату.
 
+<div align="center">
 <img width="1630" height="715" alt="image" src="https://github.com/user-attachments/assets/1c7f7bbb-9682-4da3-b803-da5cb3c68d5a" />
+<p><em>Победа! х2</em></p>
+</div>
 
 ## Заключение
 
